@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  odoo:
+    image: odoo:18.0
+    container_name: odoo18
+    depends_on:
+      - postgres
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons  # Thư mục module tùy chỉnh
+      - ./config:/etc/odoo          # File cấu hình
+      - odoo-data:/var/lib/odoo     # Dữ liệu Odoo
+    environment:
+      - HOST=postgres
+      - USER=odoo
+      - PASSWORD=odoo
+      - ODOO_ADDONS_PATH=/mnt/extra-addons
+
+  postgres:
+    image: postgres:15
+    container_name: postgres18
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  odoo-data:
+  postgres-data:

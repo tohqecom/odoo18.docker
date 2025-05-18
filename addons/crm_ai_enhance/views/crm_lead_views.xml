@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form_inherit_ai" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.ai</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_run_ai_analysis" 
+                        string="Run AI Analysis" 
+                        type="object" 
+                        class="oe_highlight"
+                        attrs="{'invisible': [('type', '!=', 'opportunity')]}"/>
+                <button name="action_suggest_gift" 
+                        string="Đề xuất quà tặng" 
+                        type="object" 
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|', ('type', '!=', 'opportunity'), ('gift_status', '!=', 'pending')]}"/>
+                <button name="action_mark_gift_sent" 
+                        string="Đánh dấu đã gửi quà" 
+                        type="object" 
+                        class="btn-primary"
+                        attrs="{'invisible': ['|', ('type', '!=', 'opportunity'), ('gift_status', '!=', 'suggested')]}"/>
+                <button name="action_decline_gift" 
+                        string="Từ chối quà" 
+                        type="object" 
+                        class="btn-secondary"
+                        attrs="{'invisible': ['|', ('type', '!=', 'opportunity'), ('gift_status', 'not in', ['suggested', 'pending'])]}"/>
+            </xpath>
+            
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Insights" attrs="{'invisible': [('type', '!=', 'opportunity')]}">
+                    <group>
+                        <group>
+                            <field name="customer_segment"/>
+                            <field name="deal_score" widget="percentage"/>
+                            <field name="last_ai_update"/>
+                        </group>
+                        <group>
+                            <field name="ai_next_action" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+                
+                <page string="Quà tặng" attrs="{'invisible': [('type', '!=', 'opportunity')]}">
+                    <group>
+                        <group>
+                            <field name="gift_status"/>
+                            <field name="gift_value" widget="monetary"/>
+                            <field name="gift_sent_date" attrs="{'invisible': [('gift_status', '!=', 'sent')]}"/>
+                        </group>
+                        <group>
+                            <field name="suggested_gift" nolabel="1" attrs="{'invisible': [('gift_status', 'not in', ['suggested', 'sent'])]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo> 
